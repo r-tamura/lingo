@@ -31,7 +31,7 @@ export const unitsRelations = relations(units, ({ many, one }) => ({
 		fields: [units.courseId],
 		references: [courses.id],
 	}),
-	lesson: many(lessons),
+	lessons: many(lessons),
 }));
 
 export const lessons = pgTable("lessons", {
@@ -48,7 +48,7 @@ export const lessonsRelations = relations(lessons, ({ many, one }) => ({
 		fields: [lessons.unitId],
 		references: [units.id],
 	}),
-	challenge: many(challenges),
+	challenges: many(challenges),
 }));
 
 export const challengesEnum = pgEnum("type", ["SELECT", "ASSIST"]);
@@ -74,28 +74,7 @@ export const challengesRelations = relations(challenges, ({ many, one }) => ({
 	challengeProgress: many(challengeProgress),
 }));
 
-export const challengeProgress = pgTable("challenge_options", {
-	id: serial("id").primaryKey(),
-	userId: text("user_id").notNull(),
-	challengeId: integer("challenge_id")
-		.references(() => challenges.id, {
-			onDelete: "cascade",
-		})
-		.notNull(),
-	completed: boolean("completed").notNull().default(false),
-});
-
-export const challengeProgressRelations = relations(
-	challengeProgress,
-	({ one }) => ({
-		challenge: one(challenges, {
-			fields: [challengeProgress.challengeId],
-			references: [challenges.id],
-		}),
-	}),
-);
-
-export const challengeOptions = pgTable("challenge_progress", {
+export const challengeOptions = pgTable("challenge_options", {
 	id: serial("id").primaryKey(),
 	challengeId: integer("challenge_id")
 		.references(() => challenges.id, {
@@ -113,6 +92,27 @@ export const challengeOptionsRelations = relations(
 	({ one }) => ({
 		challenge: one(challenges, {
 			fields: [challengeOptions.challengeId],
+			references: [challenges.id],
+		}),
+	}),
+);
+
+export const challengeProgress = pgTable("challenge_progress", {
+	id: serial("id").primaryKey(),
+	userId: text("user_id").notNull(),
+	challengeId: integer("challenge_id")
+		.references(() => challenges.id, {
+			onDelete: "cascade",
+		})
+		.notNull(),
+	completed: boolean("completed").notNull().default(false),
+});
+
+export const challengeProgressRelations = relations(
+	challengeProgress,
+	({ one }) => ({
+		challenge: one(challenges, {
+			fields: [challengeProgress.challengeId],
 			references: [challenges.id],
 		}),
 	}),
