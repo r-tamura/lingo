@@ -1,3 +1,4 @@
+import { ExitModal } from "@/components/modals/exit-modal";
 import { Toaster } from "@/components/ui/sonner";
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
@@ -20,6 +21,7 @@ export default function RootLayout({
 		<ClerkProvider>
 			<html lang="en">
 				<Toaster />
+				<ExitModal />
 				<body className={font.className}>{children}</body>
 			</html>
 		</ClerkProvider>
