@@ -59,7 +59,7 @@ export const ExitModal: React.FC = () => {
 								router.push("/learn");
 							}}
 						>
-							Keep Learning
+							End Lesson
 						</Button>
 					</div>
 				</DialogFooter>
