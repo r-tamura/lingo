@@ -1,5 +1,5 @@
-import { neon } from "@neondatabase/serverless";
-import { drizzle } from "drizzle-orm/neon-http";
+import { Pool } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/neon-serverless";
 
 import * as schema from "./schema";
 
@@ -8,7 +8,8 @@ if (!DATABASE_URL) {
 	throw new Error("envrionemnt 'DATABASE_URL' is not defined");
 }
 
-const sql = neon(DATABASE_URL);
-const db = drizzle(sql, { schema });
+const pool = new Pool({ connectionString: DATABASE_URL });
+
+const db = drizzle(pool, { schema });
 
 export default db;

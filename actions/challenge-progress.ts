@@ -45,22 +45,22 @@ export const upsertChallengeProgress = async (challengeId: number) => {
 	}
 
 	if (isPractice) {
-		// await db.transaction(async (tx) => {
-		await db
-			.update(challengeProgress)
-			.set({
-				completed: true,
-			})
-			.where(eq(challengeProgress.id, existingChallengeProgress.id));
+		await db.transaction(async (tx) => {
+			await db
+				.update(challengeProgress)
+				.set({
+					completed: true,
+				})
+				.where(eq(challengeProgress.id, existingChallengeProgress.id));
 
-		await db
-			.update(userProgress)
-			.set({
-				hearts: Math.min(currentUserProgress.hearts + 1, 5),
-				points: currentUserProgress.points + 10,
-			})
-			.where(eq(userProgress.userId, userId));
-		// });
+			await db
+				.update(userProgress)
+				.set({
+					hearts: Math.min(currentUserProgress.hearts + 1, 5),
+					points: currentUserProgress.points + 10,
+				})
+				.where(eq(userProgress.userId, userId));
+		});
 
 		revalidatePath("/learn");
 		revalidatePath("/lesson");
@@ -71,20 +71,20 @@ export const upsertChallengeProgress = async (challengeId: number) => {
 		return;
 	}
 
-	// await db.transaction(async (tx) => {
-	await db.insert(challengeProgress).values({
-		challengeId,
-		userId,
-		completed: true,
-	});
+	await db.transaction(async (tx) => {
+		await db.insert(challengeProgress).values({
+			challengeId,
+			userId,
+			completed: true,
+		});
 
-	await db
-		.update(userProgress)
-		.set({
-			points: currentUserProgress.points + 10,
-		})
-		.where(eq(userProgress.userId, userId));
-	// });
+		await db
+			.update(userProgress)
+			.set({
+				points: currentUserProgress.points + 10,
+			})
+			.where(eq(userProgress.userId, userId));
+	});
 
 	revalidatePath("/learn");
 	revalidatePath("/lesson");
