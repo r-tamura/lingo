@@ -2,10 +2,14 @@ import type { challengeOptions, challenges } from "@/db/schema";
 import { cn } from "@/lib/utils";
 import { Card } from "./card";
 
+
+
+export type Status = "correct" | "wrong" | "none";
+
 type Props = {
 	options: (typeof challengeOptions.$inferSelect)[];
 	onSelect: (id: number) => void;
-	status: "correct" | "wrong" | "none";
+	status: Status;
 	selectedOption?: number;
 	disabled?: boolean;
 	type: (typeof challenges.$inferSelect)["type"];
