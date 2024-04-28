@@ -1,4 +1,6 @@
 import { ExitModal } from "@/components/modals/exit-modal";
+import { HeartsModal } from "@/components/modals/hearts-modal";
+import { PracticeModal } from "@/components/modals/hearts-practice";
 import { Toaster } from "@/components/ui/sonner";
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
@@ -22,6 +24,8 @@ export default function RootLayout({
 			<html lang="en">
 				<Toaster />
 				<ExitModal />
+				<HeartsModal />
+				<PracticeModal />
 				<body className={font.className}>{children}</body>
 			</html>
 		</ClerkProvider>

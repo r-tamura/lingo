@@ -41,6 +41,7 @@ export const Footer = ({ onCheck, status, disabled, lessonId }: Props) => {
 						variant={"default"}
 						size={isMobile ? "sm" : "lg"}
 						onClick={() => {
+							// NOTE: QuizコンポーネントのuseMountを発火させるため
 							window.location.href = `/lesson/${lessonId}`;
 						}}
 					>

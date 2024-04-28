@@ -3,11 +3,13 @@
 import { upsertChallengeProgress } from "@/actions/challenge-progress";
 import { reduceHearts } from "@/actions/user-progress";
 import type { challengeOptions, challenges } from "@/db/schema";
+import { useHeartsModal } from "@/store/use-hearts-modal";
+import { usePracticeModal } from "@/store/use-practice-modal";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import Confetti from "react-confetti";
-import { useAudio, useWindowSize } from "react-use";
+import { useAudio, useMount, useWindowSize } from "react-use";
 import { toast } from "sonner";
 import { Challenge, type Status } from "./challenge";
 import { Footer } from "./footer";
@@ -33,6 +35,15 @@ export const Quiz = ({
 	initialLessonChallenges,
 	userSubscription,
 }: Props) => {
+	const { open: openHeartsModal } = useHeartsModal();
+	const { open: openPracticeModal } = usePracticeModal();
+
+	useMount(() => {
+		if (initialPercentage === 100) {
+			openPracticeModal();
+		}
+	});
+
 	const { width, height } = useWindowSize();
 
 	const router = useRouter();
@@ -45,7 +56,9 @@ export const Quiz = ({
 	const [pending, startTransition] = useTransition();
 	const [lessonId] = useState(initialLessonId);
 	const [hearts, setHearts] = useState(initialHearts);
-	const [percentage, setPercentage] = useState(initialPercentage);
+	const [percentage, setPercentage] = useState(() =>
+		initialPercentage === 100 ? 0 : initialPercentage,
+	);
 	const [challenges] = useState(initialLessonChallenges);
 	const [activeIndex, setActiveIndex] = useState(() => {
 		const uncompletedIndex = challenges.findIndex(
@@ -101,7 +114,7 @@ export const Quiz = ({
 				upsertChallengeProgress(challenge.id)
 					.then((response) => {
 						if (response?.error === "hearts") {
-							console.error("Missing hearts");
+							openHeartsModal();
 							return;
 						}
 
@@ -123,7 +136,7 @@ export const Quiz = ({
 				reduceHearts(challenge.id)
 					.then((response) => {
 						if (response?.error === "hearts") {
-							console.error("Missing hearts");
+							openHeartsModal();
 							return;
 						}
 						incorrectControls.play();
