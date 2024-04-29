@@ -8,6 +8,9 @@ import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+// TODO: Move alongside Item component constant into a common file
+const POINTS_TO_REFILL = 10;
+
 export const upsertUserProgress = async (courseId: number) => {
 	const { userId } = await auth();
 	const user = await currentUser();
@@ -100,4 +103,33 @@ export const reduceHearts = async (challengeId: number) => {
 	revalidatePath("/quests");
 	revalidatePath("/leaderboard");
 	revalidatePath(`/lesson/${lessonId}`);
+};
+
+export const refillHearts = async () => {
+	const currentUserProgress = await getUserProgress();
+
+	if (!currentUserProgress) {
+		throw new Error("User progress not found");
+	}
+
+	if (!currentUserProgress.hearts) {
+		throw new Error("hearts are already full");
+	}
+
+	if (currentUserProgress.points < POINTS_TO_REFILL) {
+		throw new Error("Not enough points");
+	}
+
+	await db
+		.update(userProgress)
+		.set({
+			hearts: 5,
+			points: currentUserProgress.points - POINTS_TO_REFILL,
+		})
+		.where(eq(userProgress.userId, currentUserProgress.userId));
+
+	revalidatePath("/shop");
+	revalidatePath("/learn");
+	revalidatePath("/quests");
+	revalidatePath("/leaderboard");
 };
