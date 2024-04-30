@@ -3,12 +3,11 @@
 import { refillHearts } from "@/actions/user-progress";
 import { createStripUrl } from "@/actions/user-subscription";
 import { Button } from "@/components/ui/button";
-import { HeartIcon } from "@heroicons/react/24/outline";
+import { POINTS_TO_REFILL } from "@/constants";
+import { StarIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { useTransition } from "react";
 import { toast } from "sonner";
-
-const POINTS_TO_REFILL = 10;
 
 type Props = {
 	hearts: number;
@@ -63,7 +62,7 @@ export const Items = ({ hearts, points, hasActiveSubscription }: Props) => {
 				</Button>
 			</div>
 			<div className="flex items-center w-full p-4 pt-8 gap-x-4 border-t-2">
-				<HeartIcon width={60} height={60} />
+				<StarIcon width={60} height={60} />
 				<div className="flex-1">
 					<p className="text-neutral-700 text-base lg:text-xl font-bold">
 						Unlimited hearts

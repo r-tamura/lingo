@@ -23,6 +23,7 @@ const main = async () => {
 		await db.delete(schema.challenges);
 		await db.delete(schema.challengeOptions);
 		await db.delete(schema.challengeProgress);
+		await db.delete(schema.userSubscription);
 
 		await db.insert(schema.courses).values([
 			{ id: 1, title: "Spanish", imageSrc: "/es.svg" },
@@ -52,25 +53,25 @@ const main = async () => {
 				id: 2,
 				unitId: 1,
 				order: 2,
-				title: "Verebs",
+				title: "Verbs",
 			},
 			{
 				id: 3,
 				unitId: 1,
 				order: 3,
-				title: "Verebs",
+				title: "Verbs",
 			},
 			{
 				id: 4,
 				unitId: 1,
 				order: 4,
-				title: "Verebs",
+				title: "Verbs",
 			},
 			{
 				id: 5,
 				unitId: 1,
 				order: 5,
-				title: "Verebs",
+				title: "Verbs",
 			},
 		]);
 
@@ -169,19 +170,22 @@ const main = async () => {
 
 		await db.insert(schema.challengeOptions).values([
 			{
-				challengeId: 3, // Which one of these is the "the man"
+				challengeId: 3, // Which one of these is the "the robot"
+				imageSrc: "/man.svg",
 				correct: false,
 				text: "el hombre",
 				audioSrc: "/es_man.mp3",
 			},
 			{
 				challengeId: 3,
+				imageSrc: "/woman.svg",
 				correct: false,
 				text: "el mujer",
 				audioSrc: "/es_woman.mp3",
 			},
 			{
 				challengeId: 3,
+				imageSrc: "/robot.svg",
 				correct: true,
 				text: "el robot",
 				audioSrc: "/es_robot.mp3",

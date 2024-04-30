@@ -2,7 +2,11 @@
 
 import { upsertChallengeProgress } from "@/actions/challenge-progress";
 import { reduceHearts } from "@/actions/user-progress";
-import type { challengeOptions, challenges } from "@/db/schema";
+import type {
+	challengeOptions,
+	challenges,
+	userSubscription,
+} from "@/db/schema";
 import { useHeartsModal } from "@/store/use-hearts-modal";
 import { usePracticeModal } from "@/store/use-practice-modal";
 import Image from "next/image";
@@ -25,7 +29,11 @@ type Props = {
 		completed: boolean;
 		challengeOptions: (typeof challengeOptions.$inferSelect)[];
 	})[];
-	userSubscription: any;
+	userSubscription:
+		| (typeof userSubscription.$inferSelect & {
+				isActive: boolean;
+		  })
+		| null;
 };
 
 export const Quiz = ({
@@ -49,8 +57,8 @@ export const Quiz = ({
 	const router = useRouter();
 
 	const [finishAudio] = useAudio({ src: "/finish.wav", autoPlay: true });
-	const [correctAutio, _c, correctControls] = useAudio({ src: "/correct.wav" });
-	const [incorrectAutio, _i, incorrectControls] = useAudio({
+	const [correctAudio, _c, correctControls] = useAudio({ src: "/correct.wav" });
+	const [incorrectAudio, _i, incorrectControls] = useAudio({
 		src: "/incorrect.wav",
 	});
 	const [pending, startTransition] = useTransition();
@@ -153,7 +161,6 @@ export const Quiz = ({
 		}
 	};
 
-	// TODO: remove true
 	if (!challenge) {
 		return (
 			<>
@@ -205,8 +212,8 @@ export const Quiz = ({
 
 	return (
 		<>
-			{incorrectAutio}
-			{correctAutio}
+			{incorrectAudio}
+			{correctAudio}
 			<Header
 				hearts={hearts}
 				percentage={percentage}
@@ -215,7 +222,7 @@ export const Quiz = ({
 			<div className="flex-1">
 				<div className="h-full flex items-center justify-center">
 					<div className="lg:min-h-[350px] lg:w-[600px] w-full px-6 lg:px-0 flex flex-col gap-y-12">
-						<h1 className="text-lg lg:text-4xl font-bold lg:text-start-fontbold text-nautral-700">
+						<h1 className="text-lg lg:text-4xl font-bold lg:text-start text-neutral-700">
 							{title}
 						</h1>
 						<div>
